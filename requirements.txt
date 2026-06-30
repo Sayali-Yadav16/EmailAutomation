@@ -1,0 +1,9 @@
+Flask==2.3.0
+mysql-connector-python==8.0.33
+Jinja2==3.1.2
+Werkzeug==2.3.0
+python-dotenv==1.0.0
+pandas==2.0.0
+fpdf==1.7.2
+xlsxwriter==3.1.0
+click==8.1.3

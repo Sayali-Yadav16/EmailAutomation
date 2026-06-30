@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed! - CareSync RPA</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0b1120;
+            --surface: #1e293b;
+            --primary: #38bdf8;
+            --success: #10b981;
+            --text: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(129, 140, 248, 0.1) 0%, transparent 40%);
+        }
+
+        .success-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 4rem 3rem;
+            border-radius: 32px;
+            text-align: center;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 550px;
+            width: 90%;
+            position: relative;
+            animation: heroEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes heroEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(60px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .check-blob {
+            width: 120px;
+            height: 120px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2.5rem;
+            position: relative;
+        }
+
+        .check-icon {
+            font-size: 4.5rem;
+            color: var(--success);
+            animation: checkPop 0.5s 0.3s both cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes checkPop {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 2.8rem;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-msg {
+            color: #94a3b8;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2.5rem;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .item label {
+            color: #64748b;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .item span {
+            font-weight: 600;
+            color: #f1f5f9;
+            font-size: 1.05rem;
+        }
+
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1.25rem;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            font-family: 'Outfit';
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: #0b1120;
+            box-shadow: 0 15px 30px -5px rgba(56, 189, 248, 0.4);
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -5px rgba(56, 189, 248, 0.5);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="success-card">
+        <div class="check-blob">
+            <div class="check-icon" id="success_message"><i class="fas fa-check-circle"></i></div>
+        </div>
+
+        <h1>Booking Finalized!</h1>
+        <p class="status-msg">We've secured your spot. The RPA system is now validating your appointment details.</p>
+
+        <div class="details-grid">
+            <div class="item">
+                <label>PATIENT NAME</label>
+                <span>{{ patient.name }}</span>
+            </div>
+            <div class="item">
+                <label>SPECIALIST</label>
+                <span>{{ patient.doctor }}</span>
+            </div>
+            <div class="item">
+                <label>APPT. DATE</label>
+                <span style="color: var(--primary);">{{ patient.date or 'TBD' }}</span>
+            </div>
+            <div class="item">
+                <label>TIME SLOT</label>
+                <span>{{ patient.slot or 'Pending' }}</span>
+            </div>
+            <div class="item"
+                style="grid-column: span 2; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <label>QUEUE TICKET</label>
+                <span style="font-size: 1.5rem; letter-spacing: 2px;">SYNC-{{ total }}</span>
+            </div>
+        </div>
+
+        <div class="btn-stack">
+            <a href="/" class="btn primary-btn" id="new_booking_btn">
+                <i class="fas fa-calendar-plus"></i> New Appointment
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>

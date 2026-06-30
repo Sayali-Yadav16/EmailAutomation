@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareSync RPA - Advanced Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0b1120;
+            --surface: #1e293b;
+            --primary: #38bdf8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --sidebar-width: 260px;
+        }
+
+        * { margin:0; padding:0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); }
+
+        /* ===== LAYOUT ===== */
+        .dashboard-container { display: flex; min-height: 100vh; }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 2rem 3rem;
+            background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.05), transparent 40%);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .brand { 
+            font-family: 'Outfit', sans-serif; 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: var(--primary); 
+            display: flex; 
+            align-items: center; 
+            gap: 0.75rem; 
+            margin-bottom: 3rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary);
+        }
+
+        /* ===== CARDS ===== */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 1.5rem; 
+            margin-bottom: 2.5rem; 
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .stat-label { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem; }
+        .stat-value { font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 800; }
+        .stat-icon { position: absolute; right: 1.5rem; top: 1.5rem; font-size: 2.5rem; opacity: 0.1; color: var(--primary); }
+
+        /* ===== PANEL ===== */
+        .panel { 
+            background: var(--surface); 
+            border-radius: 24px; 
+            padding: 2rem; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1rem; }
+        .search-box { 
+            background: rgba(0,0,0,0.2); 
+            border: 1px solid var(--border); 
+            padding: 1rem 1.5rem; 
+            border-radius: 14px; 
+            color: #fff; 
+            width: 100%; 
+            max-width: 400px;
+            transition: 0.3s;
+        }
+        .search-box:focus { outline: none; border-color: var(--primary); background: rgba(0,0,0,0.4); }
+
+        /* ===== TABLE ===== */
+        table { width: 100%; border-collapse: separate; border-spacing: 0 0.75rem; font-size: 1.1rem; }
+        th { padding: 1.5rem 1rem; color: var(--text-muted); font-size: 1rem; text-transform: uppercase; text-align: left; }
+        tr td { padding: 1.5rem 1rem; background: rgba(255,255,255,0.02); }
+        tr td:first-child { border-radius: 15px 0 0 15px; }
+        tr td:last-child { border-radius: 0 15px 15px 0; }
+        tr:hover td { background: rgba(255,255,255,0.05); }
+
+        /* ===== BADGES ===== */
+        .badge { padding: 0.4rem 1rem; border-radius: 10px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; }
+        .badge-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .badge-confirmed { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge-high { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        /* ===== BUTTONS ===== */
+        .btn { padding:0.75rem 1.5rem; border-radius: 12px; border:none; color:#fff; font-weight: 700; cursor:pointer; font-family: 'Inter'; text-decoration: none; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-confirm { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .btn-confirm:hover { background: var(--success); color: #fff; }
+        .btn-rpa { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .btn-rpa:hover { background: var(--warning); color: #fff; }
+        .btn-pdf { background: rgba(56, 189, 248, 0.2); color: var(--primary); }
+        .btn-pdf:hover { background: var(--primary); color: #0b1120; }
+        .btn-top { background: var(--primary); color: #0b1120; }
+
+        .header-actions { display: flex; gap: 1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-microchip"></i> CareSync RPA</div>
+            <nav>
+                <a href="/dashboard" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="/admin/logs" class="nav-item"><i class="fas fa-terminal"></i> Automation Logs</a>
+                <a href="/admin/settings" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+                <a href="/logout" class="nav-item" style="margin-top: 5rem; color: var(--danger);"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                <div>
+                    <h1 style="font-family: 'Outfit'; font-size: 2.5rem; font-weight: 800;">Command Center</h1>
+                    <p style="color: var(--text-muted);">Real-time patient processing & bot control.</p>
+                </div>
+                <div class="header-actions">
+                    <a href="/download_all_data" class="btn btn-top"><i class="fas fa-file-excel"></i> Export All</a>
+                    <a href="/run_rpa_simulation" class="btn btn-top" style="background: #fff;"><i class="fas fa-play"></i> Simulate RPA</a>
+                </div>
+            </header>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-label">Total Volume</div>
+                    <div class="stat-value">{{ stats.total }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-label">Pending Bots</div>
+                    <div class="stat-value" style="color: var(--warning);">{{ stats.pending }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                    <div class="stat-label">High Priority</div>
+                    <div class="stat-value" style="color: var(--danger);">{{ stats.high_priority }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-rocket"></i></div>
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value" style="color: var(--success);">{{ stats.processing_rate }}%</div>
+                </div>
+            </div>
+
+            <!-- TABLE PANEL -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 style="font-family: 'Outfit';">Live Patient Queue</h2>
+                    <input type="text" class="search-box" id="searchBox" placeholder="Filter by name or ID...">
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Age</th>
+                                <th>Specialist</th>
+                                <th>Appt Date</th>
+                                <th>Slot</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientTableBody">
+                            {% for p in patients %}
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 700;">{{ p.name }}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">{{ p.email }}</div>
+                                </td>
+                                <td>{{ p.age }} Years</td>
+                                <td>{{ p.doctor }}</td>
+                                <td>{{ p.appointment_date }}</td>
+                                <td>{{ p.slot }}</td>
+                                <td>
+                                    <span class="badge {% if p.priority == 'High Priority' %}badge-high{% else %}badge-normal{% endif %}">
+                                        {{ p.priority }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge {% if p.status == 'Confirmed' %}badge-confirmed{% else %}badge-pending{% endif %}">
+                                        {{ p.status }}
+                                    </span>
+                                </td>
+                                <td style="text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                    {% if p.status == 'Pending' %}
+                                    <a href="/confirm_appointment/{{ p.id }}" class="btn btn-confirm" title="Confirm Manually">Confirm</a>
+                                    {% endif %}
+                                    <a href="/download_report/{{ p.id }}" class="btn btn-pdf" title="Download PDF"><i class="fas fa-file-pdf"></i> Get PDF</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('searchBox').addEventListener('keyup', e => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#patientTableBody tr').forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
+            });
+        });
+
+        // Auto-refresh logic
+        setInterval(() => {
+            if (document.visibilityState === 'visible') location.reload();
+        }, 60000);
+    </script>
+</body>
+</html>

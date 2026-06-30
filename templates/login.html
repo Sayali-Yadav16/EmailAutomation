@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - CareSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at top right, #0ea5e920, transparent 40%),
+                              radial-gradient(circle at bottom left, #38bdf820, transparent 40%);
+        }
+
+        .login-card {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .header p { color: var(--text-muted); font-size: 0.9rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 500; }
+        .form-group input {
+            width: 100%; padding: 0.8rem 1rem; border-radius: 10px;
+            background: #0f172a; border: 1px solid #334155;
+            color: white; font-size: 1rem; transition: border-color 0.3s;
+        }
+        .form-group input:focus { outline: none; border-color: var(--primary); }
+
+        .btn {
+            width: 100%; background: var(--primary); color: white;
+            padding: 1rem; border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover { background: #0284c7; transform: translateY(-2px); }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.1); color: #ef4444;
+            padding: 0.8rem; border-radius: 8px; margin-bottom: 1.5rem;
+            font-size: 0.9rem; text-align: center; border: 1px solid rgba(239,68,68,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="header">
+            <h1>CareSync Admin</h1>
+            <p>Secure Portal Login</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label>Username</label>
+                <!-- RPA Bot Selector Friendly -->
+                <input type="text" id="username" name="username" placeholder="admin" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" name="password" placeholder="admin123" required>
+            </div>
+            <button type="submit" id="login_btn" class="btn">Login to Dashboard</button>
+        </form>
+    </div>
+</body>
+</html>

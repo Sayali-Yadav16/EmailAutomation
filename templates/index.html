@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareSync Hospital - Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --surface-color: #1e293b;
+            --primary: #38bdf8;
+            --success: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-image: radial-gradient(circle at top left, #38bdf815, transparent 40%),
+                              radial-gradient(circle at bottom right, #0ea5e915, transparent 40%);
+        }
+
+        .container {
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 600px;
+            padding: 3rem;
+            z-index: 10;
+        }
+
+        .header { text-align: center; margin-bottom: 2.5rem; }
+        h1 { font-family: 'Outfit', sans-serif; font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-muted); font-size: 0.95rem; }
+
+        .form-group { margin-bottom: 1.5rem; position: relative; }
+        label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        input, select {
+            width: 100%; padding: 0.875rem 1rem; border-radius: 12px;
+            border: 1px solid var(--border); background: #0f172a;
+            font-size: 1rem; color: var(--text-main); transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
+        }
+
+        .row { display: flex; gap: 1.5rem; }
+        .col { flex: 1; }
+
+        .slots-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
+        .slot-btn {
+            padding: 0.875rem; border: 1px solid var(--border); border-radius: 12px;
+            background: #0f172a; cursor: pointer; font-weight: 500;
+            color: var(--text-muted); text-align: center; transition: all 0.2s;
+        }
+
+        input[type="radio"] { display: none; }
+        input[type="radio"]:checked + .slot-btn {
+            background: rgba(56, 189, 248, 0.15); color: var(--primary); border-color: var(--primary);
+        }
+
+        .submit-btn {
+            width: 100%; background: var(--primary); color: #0b1120;
+            border: none; padding: 1rem; font-size: 1.1rem; font-weight: 700; font-family: 'Outfit', sans-serif;
+            border-radius: 12px; cursor: pointer; margin-top: 1rem; transition: all 0.3s ease;
+        }
+        .submit-btn:hover { background: #7dd3fc; transform: translateY(-2px); }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CareSync Hospital</h1>
+            <p class="subtitle">Secure RPA Booking Portal</p>
+        </div>
+
+        <form action="/register" method="POST" id="registrationForm">
+            <div class="form-group">
+                <label for="name">Patient Full Name</label>
+                <input type="text" id="name" name="name" placeholder="E.g., Sayali" required>
+            </div>
+
+            <div class="row">
+                <div class="form-group col">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" placeholder="E.g., 21" required>
+                </div>
+                <div class="form-group col">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="email@address.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="doctor">Select Specialist</label>
+                <select id="doctor" name="doctor">
+                    <option value="Cardiologist">Cardiologist (Heart)</option>
+                    <option value="Dentist">Dentist (Teeth)</option>
+                    <option value="Neurologist">Neurologist (Brain)</option>
+                    <option value="Orthopedic">Orthopedic (Bones)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Appointment Date</label>
+                <input type="text" id="date" name="date" placeholder="YYYY-MM-DD">
+            </div>
+
+            <div class="form-group" id="slot-container">
+                <label>Available Slots</label>
+                <div class="slots-container">
+                    <label>
+                        <input type="radio" name="slot" id="slot_morning" value="10:00 AM" checked>
+                        <div class="slot-btn" id="btn_slot_morning">10:00 AM</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="slot" id="slot_evening" value="04:00 PM">
+                        <div class="slot-btn" id="btn_slot_evening">04:00 PM</div>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" id="submit_btn" class="submit-btn" name="register">Confirm Booking</button>
+        </form>
+    </div>
+</body>
+</html>
